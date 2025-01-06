@@ -3,7 +3,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/mcpagentai.svg)](https://pypi.org/project/mcpagentai/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/mcpagentai.svg)](https://pypi.org/project/mcpagentai/)
-[![License](https://img.shields.io/pypi/l/mcpagentai.svg)](https://github.com/mcpagent/mcpagentai/blob/main/LICENSE)
+[![License](https://img.shields.io/pypi/l/mcpagentai.svg)](https://github.com/mcpagents-ai/mcpagentai/blob/main/LICENSE)
 
 **MCPAgentAI** is a standardized **tool wrapping framework** for implementing and managing diverse tools in a unified way. It is designed to help developers quickly integrate and launch tool-based use cases.
 
@@ -104,7 +104,7 @@ You can integrate MCPAgentAI with Claude Desktop using the following configurati
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/mcpagent/mcpagentai.git
+   git clone https://github.com/mcpagents-ai/mcpagentai.git
    cd mcpagentai
    ```
 
@@ -133,7 +133,7 @@ You can integrate MCPAgentAI with Claude Desktop using the following configurati
 
 ## Contributing 🤝
 
-We welcome contributions! Please open an [issue](https://github.com/mcpagent/mcpagentai/issues) or [pull request](https://github.com/mcpagent/mcpagentai/pulls).
+We welcome contributions! Please open an [issue](https://github.com/mcpagents-ai/mcpagentai/issues) or [pull request](https://github.com/mcpagents-ai/mcpagentai/pulls).
 
 ---
 
