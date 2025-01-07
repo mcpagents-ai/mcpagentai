@@ -12,9 +12,11 @@
 - 🚀 **Flexible Use Cases**: Easily add or remove tools to fit your specific requirements.
 - ✨ **Out-of-the-Box Tools**: Includes pre-built tools for common scenarios:
   - 🕑 Time utilities
-  - ☁️ Weather information
+  - ☁️ Weather information (API)
   - 📚 Dictionary lookups
   - 🧮 Calculator for mathematical expressions
+  - 💵 Currency exchange (API)
+   
 
 ### Tech Stack 🛠️
 - **Python**: Core programming language
