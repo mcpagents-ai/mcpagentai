@@ -38,8 +38,19 @@ class WeatherForecastResult(BaseModel):
     forecast: List[Dict]
 
 
-# -- DICTIONARY MODELS --------------------------------------------- #
-# (No specific pydantic model needed for dictionary, but we could define one if desired)
+# -- CURRENCY MODELS ------------------------------------------------- #
+class CurrencyTools(str, Enum):
+    GET_EXCHANGE_RATE = "get_exchange_rate"
+    CONVERT_CURRENCY = "convert_currency"
 
-# -- CALCULATOR MODELS --------------------------------------------- #
-# (No specific pydantic model needed for calculator, but we could define one if desired)
+class ExchangeRateResult(BaseModel):
+    base: str
+    rates: Dict[str, float]
+    date: str
+
+class ConversionResult(BaseModel):
+    base: str
+    target: str
+    amount: float
+    converted_amount: float
+    date: str

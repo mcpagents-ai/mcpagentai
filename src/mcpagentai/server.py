@@ -1,3 +1,4 @@
+# server.py
 import json
 from typing import Sequence
 
@@ -8,22 +9,22 @@ from mcp.types import TextContent, ImageContent, EmbeddedResource
 from .core.logging import get_logger
 from .core.multi_tool_agent import MultiToolAgent
 
-# Import the specific tool agents
+# Existing tool agents
 from .tools.time_agent import TimeAgent
 from .tools.weather_agent import WeatherAgent
 from .tools.dictionary_agent import DictionaryAgent
 from .tools.calculator_agent import CalculatorAgent
-
+from .tools.currency_agent import CurrencyAgent
 
 async def start_server(local_timezone: str | None = None) -> None:
     logger = get_logger("mcpagentai.server")
     logger.info("Starting MCPAgentAI server...")
 
-    # Instantiate sub-agents
     time_agent = TimeAgent(local_timezone=local_timezone)
     weather_agent = WeatherAgent()
     dictionary_agent = DictionaryAgent()
     calculator_agent = CalculatorAgent()
+    currency_agent = CurrencyAgent()
 
     # Combine them into one aggregator
     multi_tool_agent = MultiToolAgent([
@@ -31,6 +32,7 @@ async def start_server(local_timezone: str | None = None) -> None:
         weather_agent,
         dictionary_agent,
         calculator_agent,
+        currency_agent,
     ])
 
     server = Server("mcpagentai")
