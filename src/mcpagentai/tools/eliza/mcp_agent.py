@@ -171,13 +171,65 @@ class ElizaMCPAgent(MCPAgent):
         # You could integrate an LLM call here to process the prompt and generate a response.
         return [TextContent(type="text", text=prompt)]
 
+    import os
+    import json
+
+    import os
+    import json
+
     def _get_characters(self) -> ElizaGetCharacters:
         self.logger.info("Listing character files in %s", self.eliza_character_path)
 
-        if not os.path.isdir(self.eliza_character_path):
-            raise FileNotFoundError(f"Characters directory does not exist: {self.eliza_character_path}")
+        # Initialize debug message
+        debug_message = {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "debug.log",
+            "params": {},
+        }
 
-        character_files = os.listdir(self.eliza_character_path)
+        # Add provided path
+        debug_message["params"]["provided_eliza_character_path"] = self.eliza_character_path
+
+        # Check if /app exists
+        # app_path = "/app"
+        # if os.path.exists(app_path):
+        #     debug_message["params"]["app_structure"] = []
+        #     for root, dirs, files in os.walk(app_path):
+        #         if "node_modules" in dirs:
+        #             dirs.remove("node_modules")  # Exclude node_modules
+        #         debug_message["params"]["app_structure"].append({
+        #             "root": root,
+        #             "dirs": dirs,
+        #             "files": files,
+        #         })
+        # else:
+        #     debug_message["params"]["app_exists"] = False
+
+        # Path existence and directory checks
+        path_exists = os.path.exists(self.eliza_character_path)
+        debug_message["params"]["path_exists"] = path_exists
+
+        is_directory = os.path.isdir(self.eliza_character_path)
+        debug_message["params"]["is_directory"] = is_directory
+
+        if not is_directory:
+            debug_message["error"] = f"Characters directory does not exist: {self.eliza_character_path}"
+            print(json.dumps(debug_message))
+            raise FileNotFoundError(debug_message["error"])
+
+        # List files in the directory
+        try:
+            character_files = os.listdir(self.eliza_character_path)
+            debug_message["params"]["character_files"] = character_files
+        except Exception as e:
+            debug_message["error"] = f"Error listing files in directory: {str(e)}"
+            print(json.dumps(debug_message))
+            raise
+
+        # Print final debug message
+        print(json.dumps(debug_message))
+
         return ElizaGetCharacters(characters=character_files)
 
     def _get_character_bio(self, filename: str) -> ElizaGetCharacterBio:
@@ -190,8 +242,13 @@ class ElizaMCPAgent(MCPAgent):
         with open(file_path, "r") as fp:
             data = json.load(fp)
 
-        bio = data.get('bio', "")
-        return ElizaGetCharacterBio(characters=bio)
+        # Safely handle bio field as list or string
+        bio_data = data.get("bio", "")
+        if isinstance(bio_data, list):
+            # Convert list of strings into a single string
+            bio_data = " ".join(bio_data)
+
+        return ElizaGetCharacterBio(characters=bio_data)
 
     def _get_character_lore(self, filename: str) -> ElizaGetCharacterLore:
         file_path = os.path.join(self.eliza_character_path, filename)
@@ -203,5 +260,11 @@ class ElizaMCPAgent(MCPAgent):
         with open(file_path, "r") as fp:
             data = json.load(fp)
 
-        lore = data.get('lore', "")
-        return ElizaGetCharacterLore(characters=lore)
+        # Safely handle lore field as list or string
+        lore_data = data.get("lore", "")
+        if isinstance(lore_data, list):
+            # Convert list of strings into a single string
+            lore_data = " ".join(lore_data)
+
+        return ElizaGetCharacterLore(characters=lore_data)
+

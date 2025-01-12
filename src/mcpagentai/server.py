@@ -10,14 +10,15 @@ from mcpagentai.core.logging import get_logger
 from mcpagentai.core.multi_tool_agent import MultiToolAgent
 
 # Sub-agents
-from mcpagentai.tools.time_agent import TimeAgent
-from mcpagentai.tools.weather_agent import WeatherAgent
-from mcpagentai.tools.dictionary_agent import DictionaryAgent
 from mcpagentai.tools.calculator_agent import CalculatorAgent
 from mcpagentai.tools.currency_agent import CurrencyAgent
+from mcpagentai.tools.dictionary_agent import DictionaryAgent
 from mcpagentai.tools.eliza.agent import ElizaAgent
 from mcpagentai.tools.eliza.mcp_agent import ElizaMCPAgent
 from mcpagentai.tools.stock_agent import StockAgent
+from mcpagentai.tools.time_agent import TimeAgent
+from mcpagentai.tools.twitter.agent import TwitterAgent
+from mcpagentai.tools.weather_agent import WeatherAgent
 
 async def start_server(local_timezone: str | None = None) -> None:
     logger = get_logger("mcpagentai.server")
@@ -31,17 +32,19 @@ async def start_server(local_timezone: str | None = None) -> None:
     eliza_agent = ElizaAgent()
     eliza_mcp_agent = ElizaMCPAgent()
     stock_agent = StockAgent()
+    twitter_agent = TwitterAgent()
 
     # Combine them into one aggregator
     multi_tool_agent = MultiToolAgent([
-        time_agent,
-        weather_agent,
-        dictionary_agent,
-        calculator_agent,
-        currency_agent,
-        eliza_agent,
+        # time_agent,
+        # weather_agent,
+        # dictionary_agent,
+        # calculator_agent,
+        # currency_agent,
+        # eliza_agent,
         eliza_mcp_agent,
         stock_agent,
+        twitter_agent,
     ])
 
     server = Server("mcpagentai")

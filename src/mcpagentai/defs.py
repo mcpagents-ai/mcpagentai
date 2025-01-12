@@ -4,7 +4,7 @@ Shared data models used across multiple tools (pydantic BaseModels, Enums, etc.)
 
 from enum import Enum
 from pydantic import BaseModel
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 
 # -------------------------------------------------------------------------
@@ -110,3 +110,18 @@ class StockGetTickerByNameAgent(BaseModel):
 
 class StockGetPrice(BaseModel):
     price: float
+
+# -- TWITTER MODELS ------------------------------------------ #
+
+class TwitterTools(str, Enum):
+    CREATE_TWEET = "create_tweet"
+    REPLY_TWEET = "reply_tweet"
+
+class TwitterResult(BaseModel):
+    """
+    Minimal response model for tweet creation or reply.
+    """
+    success: bool
+    message: Optional[str] = None
+    tweet_url: Optional[str] = None
+    error: Optional[str] = None
