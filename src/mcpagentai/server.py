@@ -1,20 +1,24 @@
-# server.py
 import json
+import logging
 from typing import Sequence
 
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import TextContent, ImageContent, EmbeddedResource
 
-from .core.logging import get_logger
-from .core.multi_tool_agent import MultiToolAgent
+from mcpagentai.core.logging import get_logger
+from mcpagentai.core.multi_tool_agent import MultiToolAgent
 
-# Existing tool agents
-from .tools.time_agent import TimeAgent
-from .tools.weather_agent import WeatherAgent
-from .tools.dictionary_agent import DictionaryAgent
-from .tools.calculator_agent import CalculatorAgent
-from .tools.currency_agent import CurrencyAgent
+# Sub-agents
+from mcpagentai.tools.calculator_agent import CalculatorAgent
+from mcpagentai.tools.currency_agent import CurrencyAgent
+from mcpagentai.tools.dictionary_agent import DictionaryAgent
+from mcpagentai.tools.eliza.agent import ElizaAgent
+from mcpagentai.tools.eliza.mcp_agent import ElizaMCPAgent
+from mcpagentai.tools.stock_agent import StockAgent
+from mcpagentai.tools.time_agent import TimeAgent
+from mcpagentai.tools.twitter.agent import TwitterAgent
+from mcpagentai.tools.weather_agent import WeatherAgent
 
 async def start_server(local_timezone: str | None = None) -> None:
     logger = get_logger("mcpagentai.server")
@@ -25,14 +29,22 @@ async def start_server(local_timezone: str | None = None) -> None:
     dictionary_agent = DictionaryAgent()
     calculator_agent = CalculatorAgent()
     currency_agent = CurrencyAgent()
+    eliza_agent = ElizaAgent()
+    eliza_mcp_agent = ElizaMCPAgent()
+    stock_agent = StockAgent()
+    twitter_agent = TwitterAgent()
 
     # Combine them into one aggregator
     multi_tool_agent = MultiToolAgent([
-        time_agent,
-        weather_agent,
-        dictionary_agent,
-        calculator_agent,
-        currency_agent,
+        # time_agent,
+        # weather_agent,
+        # dictionary_agent,
+        # calculator_agent,
+        # currency_agent,
+        # eliza_agent,
+        eliza_mcp_agent,
+        stock_agent,
+        twitter_agent,
     ])
 
     server = Server("mcpagentai")
@@ -53,7 +65,8 @@ async def start_server(local_timezone: str | None = None) -> None:
         try:
             return multi_tool_agent.call_tool(name, arguments)
         except Exception as e:
-            logger.error(f"Error in call_tool: {str(e)}")
+            logger.exception("Error in call_tool")
+            # Avoid using e.message. Use str(e) instead
             raise ValueError(f"Error processing request: {str(e)}") from e
 
     options = server.create_initialization_options()

@@ -4,7 +4,6 @@ from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource
 
 from .logging import get_logger
 
-
 class MCPAgent(abc.ABC):
     """
     Master abstract base class for MCP Agents of any type.

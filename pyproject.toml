@@ -19,7 +19,8 @@ classifiers = [
 dependencies = [
     "mcp",
     "pydantic",
-    "requests",  # if needed by weather or dictionary
+    "requests",
+    "tweepy",
 ]
 
 [project.scripts]
