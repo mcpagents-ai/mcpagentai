@@ -16,6 +16,9 @@
   - 📚 Dictionary lookups
   - 🧮 Calculator for mathematical expressions
   - 💵 Currency exchange (API)
+  - 📈 Stocks Data: Access real-time and historical stock market information.
+  - 🤖 [ElizaOS](https://elizaos.github.io/eliza/) Integration: Seamlessly connect and interact with ElizaOS for enhanced automation.
+  - 🐦 **Twitter Management**: Automate tweeting, replying, and managing Twitter interactions.
    
 
 ### Tech Stack 🛠️
