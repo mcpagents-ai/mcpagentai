@@ -1,7 +1,7 @@
 import logging
 from typing import Sequence, Union
 
-from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource
+from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource, ErrorData
 from mcp.shared.exceptions import McpError
 from mcpagentai.core.agent_base import MCPAgent
 
@@ -10,7 +10,9 @@ from mcpagentai.defs import TwitterTools, TwitterResult
 
 # import the Node-based logic:
 from . import agent_twitter_client  # or wherever your `agent_twitter_client.py` lives
+from .agent_twitter_client_wrapper import AgentTwitterClientWrapper
 
+import os
 
 class TwitterAgent(MCPAgent):
     """
@@ -21,6 +23,11 @@ class TwitterAgent(MCPAgent):
     def __init__(self):
         super().__init__()
         self.logger.info("TwitterAgent initialized (Node-based).")
+        twitter_username = os.getenv('TWITTER_USERNAME')
+        twitter_password = os.getenv('TWITTER_PASSWORD')
+        cookies_path = os.getenv("ELIZA_PATH")
+        cookies_path = os.path.join(cookies_path, "cookies.json")
+        self.twitter_bot = AgentTwitterClientWrapper(twitter_username, twitter_password, cookies_path)
 
     def list_tools(self) -> list[Tool]:
         """
@@ -54,7 +61,7 @@ class TwitterAgent(MCPAgent):
                         },
                         "tweet_url": {
                             "type": "string",
-                            "description": "Full tweet URL or ID to reply to (e.g., https://twitter.com/user/status/123)."
+                            "description": "Full tweet URL or ID to reply to (e.g., https://x.com/user/status/123)."
                         }
                     },
                     "required": ["reply_text", "tweet_url"]
@@ -83,14 +90,14 @@ class TwitterAgent(MCPAgent):
     def _handle_create_tweet(self, arguments: dict) -> Sequence[TextContent]:
         tweet_text = arguments.get("tweet_text", "").strip()
         if not tweet_text:
-            raise McpError("Missing 'tweet_text' in the request.")
+            raise McpError(ErrorData(message="Missing 'tweet_text' in the request.", code=-1))
 
-        result_data = agent_twitter_client.send_tweet(tweet_text)
+        result_data = self.twitter_bot.send_tweet(tweet_text)
         # We can parse result_data into a Pydantic model for consistency
         result_model = TwitterResult(**result_data)
 
         if not result_model.success:
-            raise McpError(f"Failed to create tweet: {result_model.error}")
+            raise McpError(ErrorData(message=f"Failed to create tweet: {result_model.error}", code=-1))
 
         message = (
             f"Tweet created successfully!\n\n"
@@ -103,13 +110,13 @@ class TwitterAgent(MCPAgent):
         reply_text = arguments.get("reply_text", "").strip()
         tweet_url = arguments.get("tweet_url", "").strip()
         if not reply_text or not tweet_url:
-            raise McpError("Missing 'reply_text' or 'tweet_url' in request.")
+            raise McpError(ErrorData(message="Missing 'reply_text' or 'tweet_url' in request.", code=-1))
 
-        result_data = twitter_api.reply_tweet(reply_text, tweet_url)
+        result_data = self.twitter_bot.reply_tweet(reply_text, tweet_url)
         result_model = TwitterResult(**result_data)
 
         if not result_model.success:
-            raise McpError(f"Failed to reply to tweet: {result_model.error}")
+            raise McpError(ErrorData(message=f"Failed to reply to tweet: {result_model.error}", code=-1))
 
         message = (
             f"Reply posted successfully!\n\n"
