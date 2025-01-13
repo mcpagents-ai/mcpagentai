@@ -27,22 +27,22 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # ------------------------------------------------
 # (OPTIONAL) 2nd Stage: Install Node.js dependencies
 # ------------------------------------------------
-#FROM node:18-slim AS node_builder
+FROM node:18-slim AS node_builder
 #
-#WORKDIR /app
+WORKDIR /app
 #
 ## Create a minimal package.json for installing agent-twitter-client
-#RUN printf '{\n\
-#  "name": "agent-twitter-client-setup",\n\
-#  "version": "1.0.0",\n\
-#  "dependencies": {\n\
-#    "agent-twitter-client": "^0.0.18",\n\
-#    "tough-cookie": "^4.0.0"\n\
-#  }\n\
-#}\n' > package.json
+RUN printf '{\n\
+  "name": "agent-twitter-client-setup",\n\
+  "version": "1.0.0",\n\
+  "dependencies": {\n\
+    "agent-twitter-client": "^0.0.18",\n\
+    "tough-cookie": "^4.0.0"\n\
+  }\n\
+}\n' > package.json
 #
 ## Install the required Node.js packages
-#RUN npm install
+RUN npm install
 
 
 # --------------------------------------------
@@ -56,16 +56,16 @@ WORKDIR /app
 COPY --from=uv /app/.venv /app/.venv
 
 # OPTIONAL Copy Node.js dependencies from the node_builder stage
-#COPY --from=node_builder /app/node_modules /app/node_modules
-#COPY --from=node_builder /app/package.json /app/package.json
+COPY --from=node_builder /app/node_modules /app/node_modules
+COPY --from=node_builder /app/package.json /app/package.json
 
 # OPTIONAL Install Node.js in the runtime container
-#RUN apt-get update && \
-#    apt-get install -y curl && \
-#    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-#    apt-get install -y nodejs && \
-#    apt-get clean && \
-#    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set up environment variables for Agents and other
 ENV PATH="/app/.venv/bin:$PATH"
@@ -77,9 +77,9 @@ ENV ELIZA_PATH=/app/eliza
 ENV ELIZA_API_URL=http://192.168.1.14:5173/
 
 # Twtitter dependencies
-#ENV TWITTER_USERNAME=
-#ENV TWITTER_PASSWORD=
-#ENV TWITTER_EMAIL=
+ENV TWITTER_USERNAME=
+ENV TWITTER_PASSWORD=
+ENV TWITTER_EMAIL=
 
 ENV TWITTER_API_KEY=
 ENV TWITTER_API_SECRET=
