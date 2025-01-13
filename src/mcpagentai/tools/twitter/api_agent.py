@@ -189,6 +189,8 @@ class TwitterAgent(MCPAgent):
                 text=message,
                 in_reply_to_tweet_id=tweet_id
             )
+            self.logger.debug(f"Reply Tweet Response: {response}")
+
             if response.data:
                 reply_id = response.data['id']
                 reply_url = f"https://twitter.com/{self._get_username()}/status/{reply_id}"
@@ -205,7 +207,12 @@ class TwitterAgent(MCPAgent):
             error_msg = f"Error replying to tweet: {e}"
             self.logger.error(error_msg)
             raise McpError(error_msg) from e
+        except KeyError as e:
+            error_msg = f"Missing expected key in response data: {e}"
+            self.logger.error(error_msg)
+            raise McpError(error_msg) from e
         except Exception as e:
             error_msg = f"Unexpected error replying to tweet: {e}"
             self.logger.error(error_msg)
             raise McpError(error_msg) from e
+

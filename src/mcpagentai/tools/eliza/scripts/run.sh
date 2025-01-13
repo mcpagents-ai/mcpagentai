@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 # --------------------------------------------
 # Color Definitions
 # --------------------------------------------
@@ -78,35 +77,36 @@ get_characters_argument() {
         fi
     done
 
-    echo "characters=$characters"
+    echo "$characters"
 }
 
 # Function to start a background process using pnpm with arguments
 start_pnpm_process() {
-    local script=$1
-    shift
-    local args=("$@")
-    local log_file=$2
-    local port=$3
+    local script="$1"        # Script name (e.g., start, start:client)
+    local log_file="$2"      # Log file (e.g., server.log)
+    local port="$3"          # Port number (e.g., 3000)
+    shift 3
+    local args=("$@")        # Additional arguments (e.g., --characters=...)
 
     if is_port_in_use "$port"; then
         log "WARN" "Port $port is already in use. Skipping start of process '$script'."
     else
-        if [ -z "${args[*]}" ]; then
+        if [ ${#args[@]} -eq 0 ]; then
             log "INFO" "Starting process '$script' on port $port without additional arguments."
         else
+            # Join the args array into a single string for logging
             log "INFO" "Starting process '$script' on port $port with arguments: ${args[*]}"
         fi
 
         # Use 'pnpm run' to execute scripts defined in package.json
         # '--' separates pnpm arguments from script arguments
-        nohup pnpm run "$script" -- "${args[@]}" > "$log_file" 2>&1 &
+        nohup pnpm run "$script" "${args[@]}" > "$log_file" 2>&1 &
         local pid=$!
         echo "$pid" > "${log_file%.log}.pid"
         log "DEBUG" "Process '$script' started with PID $pid. Logs: $log_file"
 
-        log "DEBUG" "Sleep 10s"
-        sleep 10  # Allow some time for the process to start
+        log "DEBUG" "Sleeping for 15 seconds to allow process to start."
+        sleep 15  # Allow some time for the process to start
 
         if is_port_in_use "$port"; then
             log "SUCCESS" "Process '$script' is running successfully on port $port."
@@ -189,22 +189,21 @@ fi
 
 # Navigate to the ELIZA_PATH directory
 cd "$ELIZA_PATH"
+
 log "INFO" "Navigated to ELIZA_PATH: $ELIZA_PATH"
 
 # Get characters argument
-characters_arg=$(get_characters_argument)
+characters_value=$(get_characters_argument)
 
-# Extract characters value
-characters_value="${characters_arg#characters=}"
 log "INFO" "Loaded characters: ${characters_value//,/ , }"
 
 # Start Eliza Server on port 3000
 # Ensure that your package.json has a script named "start" that accepts the --characters argument
-start_pnpm_process "start" "--characters=$characters_value" "server.log" 3000
+start_pnpm_process "start" "server.log" 3000 "--characters=\"${characters_value}\""
 
 # Start Eliza Client on port 5173
 # Ensure that your package.json has a script named "start:client"
-start_pnpm_process "start:client" "" "client.log" 5173
+start_pnpm_process "start:client" "client.log" 5173 ""
 
 # Final Log Messages
 log "INFO" "=================================================="
