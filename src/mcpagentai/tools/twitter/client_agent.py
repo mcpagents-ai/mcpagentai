@@ -9,7 +9,6 @@ from mcpagentai.core.agent_base import MCPAgent
 from mcpagentai.defs import TwitterTools, TwitterResult
 
 # import the Node-based logic:
-from . import agent_twitter_client  # or wherever your `agent_twitter_client.py` lives
 from .agent_twitter_client_wrapper import AgentTwitterClientWrapper
 
 import os
