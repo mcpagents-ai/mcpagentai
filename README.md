@@ -44,14 +44,18 @@ Here’s why **MCP** matters:
 ## Installation 📦
 
 ### Install via PyPI
+```bash
 pip install mcpagentai
+```
 
 ---
 
 ## Usage 💻
 
 ### Run Locally
+```bash
 mcpagentai --local-timezone "America/New_York"
+```
 
 ### Run in Docker
 1. **Build the Docker image:**
