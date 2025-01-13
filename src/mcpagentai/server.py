@@ -35,15 +35,15 @@ async def start_server(local_timezone: str | None = None) -> None:
 
     # Combine them into one aggregator
     multi_tool_agent = MultiToolAgent([
-        time_agent,
-        weather_agent,
-        dictionary_agent,
-        calculator_agent,
-        currency_agent,
-        eliza_agent,
-        # eliza_mcp_agent,
-        stock_agent,
-        twitter_agent,
+        # time_agent,
+        # weather_agent,
+        # dictionary_agent,
+        # calculator_agent,
+        # currency_agent,
+        # eliza_agent,
+        eliza_mcp_agent,
+        # stock_agent,
+        # twitter_agent,
     ])
 
     server = Server("mcpagentai")

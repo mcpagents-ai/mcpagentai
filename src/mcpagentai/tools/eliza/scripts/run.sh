@@ -189,7 +189,9 @@ fi
 
 # Navigate to the ELIZA_PATH directory
 cd "$ELIZA_PATH"
-
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm use 23.3.0
 log "INFO" "Navigated to ELIZA_PATH: $ELIZA_PATH"
 
 # Get characters argument
