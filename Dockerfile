@@ -25,24 +25,25 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 
 # ------------------------------------------------
-# 2nd Stage: Install Node.js dependencies
+# (OPTIONAL) 2nd Stage: Install Node.js dependencies
 # ------------------------------------------------
-FROM node:18-slim AS node_builder
+#FROM node:18-slim AS node_builder
+#
+#WORKDIR /app
+#
+## Create a minimal package.json for installing agent-twitter-client
+#RUN printf '{\n\
+#  "name": "agent-twitter-client-setup",\n\
+#  "version": "1.0.0",\n\
+#  "dependencies": {\n\
+#    "agent-twitter-client": "^0.0.18",\n\
+#    "tough-cookie": "^4.0.0"\n\
+#  }\n\
+#}\n' > package.json
+#
+## Install the required Node.js packages
+#RUN npm install
 
-WORKDIR /app
-
-# Create a minimal package.json for installing agent-twitter-client
-RUN printf '{\n\
-  "name": "agent-twitter-client-setup",\n\
-  "version": "1.0.0",\n\
-  "dependencies": {\n\
-    "agent-twitter-client": "^0.0.18",\n\
-    "tough-cookie": "^4.0.0"\n\
-  }\n\
-}\n' > package.json
-
-# Install the required Node.js packages
-RUN npm install
 
 # --------------------------------------------
 # 3rd Stage: Final runtime image
@@ -54,37 +55,50 @@ WORKDIR /app
 # Copy Python virtual environment from the uv stage
 COPY --from=uv /app/.venv /app/.venv
 
-# Copy Node.js dependencies from the node_builder stage
-COPY --from=node_builder /app/node_modules /app/node_modules
-COPY --from=node_builder /app/package.json /app/package.json
+# OPTIONAL Copy Node.js dependencies from the node_builder stage
+#COPY --from=node_builder /app/node_modules /app/node_modules
+#COPY --from=node_builder /app/package.json /app/package.json
 
-# Install Node.js in the runtime container
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# OPTIONAL Install Node.js in the runtime container
+#RUN apt-get update && \
+#    apt-get install -y curl && \
+#    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+#    apt-get install -y nodejs && \
+#    apt-get clean && \
+#    rm -rf /var/lib/apt/lists/*
 
-# Set up environment variables
+# Set up environment variables for Agents and other
 ENV PATH="/app/.venv/bin:$PATH"
-ENV ELIZA_PATH=/app/eliza
-ENV ELIZA_API_URL=http://192.168.1.14:5173/
 ENV LOCAL_TIMEZONE=Europe/Warsaw
 ENV LOG_LEVEL=DEBUG
 
-ENV TWITTER_USERNAME=
-ENV TWITTER_PASSWORD=
-ENV TWITTER_EMAIL=
+# ElizaOS dependencies
+ENV ELIZA_PATH=/app/eliza
+ENV ELIZA_API_URL=http://192.168.1.14:5173/
+
+# Twtitter dependencies
+#ENV TWITTER_USERNAME=
+#ENV TWITTER_PASSWORD=
+#ENV TWITTER_EMAIL=
+
+ENV TWITTER_API_KEY=
+ENV TWITTER_API_SECRET=
+ENV TWITTER_ACCESS_TOKEN=
+ENV TWITTER_ACCESS_SECRET=
+ENV TWITTER_CLIENT_ID=
+ENV TWITTER_CLIENT_SECRET=
+ENV TWITTER_BEARER_TOKEN=
+
 
 # Verify installations
-RUN python --version && node -v && npm -v
+RUN python --version # && node -v && npm -v
 
 # Ensure the mcpagentai script exists
 RUN if ! [ -x "$(command -v mcpagentai)" ]; then \
       echo "mcpagentai not found in PATH"; \
       exit 1; \
     fi
+
 
 # Set the default entry point
 ENTRYPOINT ["mcpagentai"]

@@ -15,20 +15,18 @@ from mcpagentai.defs import (
 )
 from mcpagentai.core.agent_base import MCPAgent
 
-logger = logging.getLogger(__name__)
-
 
 class ElizaMCPAgent(MCPAgent):
     """
     Handles local Eliza character JSON files for bios and lore and enables interaction with characters.
     """
 
-    def __init__(self, eliza_path: str = None):
+    def __init__(self):
         super().__init__()
-        self.eliza_path = eliza_path or os.getenv("ELIZA_PATH")
+        self.eliza_path = os.getenv("ELIZA_PATH")
         self.eliza_character_path = os.path.join(self.eliza_path, "characters")
 
-        logger.info("ElizaMCPAgent initialized with character path: %s", self.eliza_character_path)
+        self.logger.info("ElizaMCPAgent initialized with character path: %s", self.eliza_character_path)
 
     def list_tools(self) -> list[Tool]:
         return [

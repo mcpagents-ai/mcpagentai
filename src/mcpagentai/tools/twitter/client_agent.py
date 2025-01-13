@@ -9,9 +9,8 @@ from mcpagentai.core.agent_base import MCPAgent
 from mcpagentai.defs import TwitterTools, TwitterResult
 
 # import the Node-based logic:
-from . import twitter_api  # or wherever your `twitter_api.py` lives
+from . import agent_twitter_client  # or wherever your `agent_twitter_client.py` lives
 
-logger = logging.getLogger(__name__)
 
 class TwitterAgent(MCPAgent):
     """
@@ -21,7 +20,7 @@ class TwitterAgent(MCPAgent):
 
     def __init__(self):
         super().__init__()
-        logger.info("TwitterAgent initialized (Node-based).")
+        self.logger.info("TwitterAgent initialized (Node-based).")
 
     def list_tools(self) -> list[Tool]:
         """
@@ -86,7 +85,7 @@ class TwitterAgent(MCPAgent):
         if not tweet_text:
             raise McpError("Missing 'tweet_text' in the request.")
 
-        result_data = twitter_api.send_tweet(tweet_text)
+        result_data = agent_twitter_client.send_tweet(tweet_text)
         # We can parse result_data into a Pydantic model for consistency
         result_model = TwitterResult(**result_data)
 

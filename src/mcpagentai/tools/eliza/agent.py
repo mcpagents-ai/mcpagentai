@@ -2,6 +2,9 @@ import os
 import json
 import logging
 import requests
+import subprocess
+import time
+import socket
 
 from typing import Sequence, Union
 
@@ -12,18 +15,18 @@ from mcpagentai.core.agent_base import MCPAgent
 from mcpagentai.defs import ElizaTools, ElizaGetAgents, ElisaMessageAgent
 
 
-logger = logging.getLogger(__name__)
 
 class ElizaAgent(MCPAgent):
     """
     Communicates with a remote Eliza server over HTTP.
     """
 
-    def __init__(self, eliza_api_url: str = None):
+    def __init__(self):
         super().__init__()
         # Use .env or fallback default if not provided
-        self.eliza_api_url = eliza_api_url or os.getenv("ELIZA_API_URL")
-        logger.info("ElizaAgent initialized with API URL: %s", self.eliza_api_url)
+        self.eliza_api_url = os.getenv("ELIZA_API_URL")
+        self.eliza_path = os.getenv("ELIZA_PATH")
+        self.logger.info("ElizaAgent initialized with API URL: %s", self.eliza_api_url)
 
     def list_tools(self) -> list[Tool]:
         return [
@@ -61,9 +64,9 @@ class ElizaAgent(MCPAgent):
         ]
 
     def call_tool(
-        self,
-        name: str,
-        arguments: dict
+            self,
+            name: str,
+            arguments: dict
     ) -> Sequence[Union[TextContent, ImageContent, EmbeddedResource]]:
         self.logger.debug("ElizaAgent call_tool => name=%s, arguments=%s", name, arguments)
         if name == ElizaTools.GET_AGENTS.value:
@@ -99,10 +102,10 @@ class ElizaAgent(MCPAgent):
         try:
             response = requests.get(agents_url)
             if response.status_code != 200:
-                raise McpError("Cant connect to Eliza server")
+                raise McpError("Can't connect to Eliza server")
         except requests.RequestException as e:
             error_msg = f"Request error connecting to Eliza server: {str(e)}"
-            logger.error(error_msg)
+            self.logger.error(error_msg)
             raise McpError(error_msg) from e
 
         return response.json()
@@ -127,7 +130,7 @@ class ElizaAgent(MCPAgent):
                 break
 
         if agent_id is None:
-            raise McpError(f"Couldnt find agent of name: {agent_name}")
+            raise McpError(f"Couldn't find agent with name: {agent_name}")
 
         message_url = f"{self.eliza_api_url}/api/{agent_id}/message"
         if self.eliza_api_url.startswith("http://"):
@@ -161,10 +164,10 @@ class ElizaAgent(MCPAgent):
         try:
             response = requests.post(message_url, headers=headers, files=files)
             if response.status_code != 200:
-                raise McpError(f"Cant connect to Eliza server or invalid agent id parameter: {agent_id}")
+                raise McpError(f"Can't connect to Eliza server or invalid agent id parameter: {agent_id}")
         except requests.RequestException as e:
             error_msg = f"Request error posting to Eliza server: {str(e)}"
-            logger.error(error_msg)
+            self.logger.error(error_msg)
             raise McpError(error_msg) from e
 
         resp_json = response.json()
