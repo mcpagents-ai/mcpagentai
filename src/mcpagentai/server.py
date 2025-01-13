@@ -15,8 +15,8 @@ from mcpagentai.tools.eliza.agent import ElizaAgent
 from mcpagentai.tools.eliza.mcp_agent import ElizaMCPAgent
 from mcpagentai.tools.stock_agent import StockAgent
 from mcpagentai.tools.time_agent import TimeAgent
-from mcpagentai.tools.twitter.api_agent import TwitterAgent
-# from mcpagentai.tools.twitter.client_agent import TwitterAgent
+#from mcpagentai.tools.twitter.api_agent import TwitterAgent
+from mcpagentai.tools.twitter.client_agent import TwitterAgent
 from mcpagentai.tools.weather_agent import WeatherAgent
 
 async def start_server(local_timezone: str | None = None) -> None:

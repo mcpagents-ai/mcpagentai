@@ -85,6 +85,8 @@ class ElizaParserTools(str, Enum):
     GET_CHARACTERS = "get_characters"
     GET_CHARACTER_BIO = "get_character_bio"
     GET_CHARACTER_LORE = "get_character_lore"
+    GET_FULL_AGENT_INFO = "get_full_agent_info"
+    INTERACT_WITH_AGENT = "interact_with_agent"
 
 class ElizaGetCharacters(BaseModel):
     """List of local character JSON files."""

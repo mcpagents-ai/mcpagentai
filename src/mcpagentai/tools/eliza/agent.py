@@ -8,7 +8,7 @@ import socket
 
 from typing import Sequence, Union
 
-from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource
+from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource, ErrorData
 from mcp.shared.exceptions import McpError
 
 from mcpagentai.core.agent_base import MCPAgent
@@ -88,9 +88,9 @@ class ElizaAgent(MCPAgent):
         self.logger.debug("Handling MESSAGE_AGENT with agent=%s, message=%s", agent, message)
 
         if agent is None:
-            raise McpError("Agent name not provided")
+            raise McpError(ErrorData(message="Agent name not provided", code=-1))
         if message is None:
-            raise McpError("Message to agent not provided")
+            raise McpError(ErrorData(message="Message to agent not provided", code=-1))
 
         result = self._message_agent(agent, message)
         return [TextContent(type="text", text=json.dumps(result.model_dump(), indent=2))]
@@ -102,11 +102,11 @@ class ElizaAgent(MCPAgent):
         try:
             response = requests.get(agents_url)
             if response.status_code != 200:
-                raise McpError("Can't connect to Eliza server")
+                raise McpError(ErrorData(message="Message to agent not provided", code=-1))
         except requests.RequestException as e:
             error_msg = f"Request error connecting to Eliza server: {str(e)}"
             self.logger.error(error_msg)
-            raise McpError(error_msg) from e
+            raise McpError(ErrorData(message=error_msg, code=-1))
 
         return response.json()
 
@@ -130,7 +130,7 @@ class ElizaAgent(MCPAgent):
                 break
 
         if agent_id is None:
-            raise McpError(f"Couldn't find agent with name: {agent_name}")
+            raise McpError(ErrorData(message=f"Couldn't find agent with name: {agent_name}", code=-1))
 
         message_url = f"{self.eliza_api_url}/api/{agent_id}/message"
         if self.eliza_api_url.startswith("http://"):
@@ -164,11 +164,11 @@ class ElizaAgent(MCPAgent):
         try:
             response = requests.post(message_url, headers=headers, files=files)
             if response.status_code != 200:
-                raise McpError(f"Can't connect to Eliza server or invalid agent id parameter: {agent_id}")
+                raise McpError(ErrorData(message=f"Can't connect to Eliza server or invalid agent id parameter: {agent_id}", code=-1))
         except requests.RequestException as e:
             error_msg = f"Request error posting to Eliza server: {str(e)}"
             self.logger.error(error_msg)
-            raise McpError(error_msg) from e
+            raise McpError(ErrorData(message=error_msg, code=-1))
 
         resp_json = response.json()
         agent_message = resp_json[0]["text"] if resp_json else ""

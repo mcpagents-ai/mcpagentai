@@ -4,7 +4,7 @@ import logging
 
 from typing import Sequence, Union
 
-from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource
+from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource, ErrorData
 from mcp.shared.exceptions import McpError
 
 from mcpagentai.defs import (
@@ -64,12 +64,12 @@ class ElizaMCPAgent(MCPAgent):
                 }
             ),
             Tool(
-                name="get_full_agent_info",
+                name=ElizaParserTools.GET_FULL_AGENT_INFO.value,
                 description="Get full agent info, including bio and lore, for all characters",
                 inputSchema={"type": "object", "properties": {}}
             ),
             Tool(
-                name="interact_with_agent",
+                name=ElizaParserTools.INTERACT_WITH_AGENT.value,
                 description="Interact with an agent by building a prompt based on bio, lore, and previous answers",
                 inputSchema={
                     "type": "object",
@@ -106,9 +106,9 @@ class ElizaMCPAgent(MCPAgent):
             return self._handle_get_character_bio(arguments)
         elif name == ElizaParserTools.GET_CHARACTER_LORE.value:
             return self._handle_get_character_lore(arguments)
-        elif name == "get_full_agent_info":
+        elif name == ElizaParserTools.GET_FULL_AGENT_INFO.value:
             return self._handle_get_full_agent_info(arguments)
-        elif name == "interact_with_agent":
+        elif name == ElizaParserTools.INTERACT_WITH_AGENT.value:
             return self._handle_interact_with_agent(arguments)
         else:
             raise ValueError(f"Unknown tool value: {name}")
@@ -120,14 +120,14 @@ class ElizaMCPAgent(MCPAgent):
     def _handle_get_character_bio(self, arguments: dict) -> Sequence[TextContent]:
         filename = arguments.get("character_json_file_name")
         if not filename:
-            raise McpError("Character JSON file name not provided")
+            raise McpError(ErrorData(message="Character JSON file name not provided", code=-1))
         result = self._get_character_bio(filename)
         return [TextContent(type="text", text=json.dumps(result.model_dump(), indent=2))]
 
     def _handle_get_character_lore(self, arguments: dict) -> Sequence[TextContent]:
         filename = arguments.get("character_json_file_name")
         if not filename:
-            raise McpError("Character JSON file name not provided")
+            raise McpError(ErrorData(message="Character JSON file name not provided", code=-1))
         result = self._get_character_lore(filename)
         return [TextContent(type="text", text=json.dumps(result.model_dump(), indent=2))]
 
@@ -155,9 +155,9 @@ class ElizaMCPAgent(MCPAgent):
         previous_answers = arguments.get("previous_answers", [])
 
         if not filename:
-            raise McpError("Character JSON file name not provided")
+            raise McpError(ErrorData(message="Character JSON file name not provided", code=-1))
         if not question:
-            raise McpError("Question not provided")
+            raise McpError(ErrorData(message="Question not provided", code=-1))
 
         bio = self._get_character_bio(filename).characters
         lore = self._get_character_lore(filename).characters
@@ -168,12 +168,6 @@ class ElizaMCPAgent(MCPAgent):
         # In this placeholder, we just return the generated prompt.
         # You could integrate an LLM call here to process the prompt and generate a response.
         return [TextContent(type="text", text=prompt)]
-
-    import os
-    import json
-
-    import os
-    import json
 
     def _get_characters(self) -> ElizaGetCharacters:
         self.logger.info("Listing character files in %s", self.eliza_character_path)
