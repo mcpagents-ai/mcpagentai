@@ -40,10 +40,10 @@ async def start_server(local_timezone: str | None = None) -> None:
         # dictionary_agent,
         # calculator_agent,
         # currency_agent,
-        # eliza_agent,
-        eliza_mcp_agent,
+        eliza_agent,
+        # eliza_mcp_agent,
         # stock_agent,
-        # twitter_agent,
+        twitter_agent,
     ])
 
     server = Server("mcpagentai")

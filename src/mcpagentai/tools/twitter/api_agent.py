@@ -1,5 +1,6 @@
 import os
 import logging
+import json  # Ensure json is imported
 import tweepy
 
 from typing import Sequence, Union
@@ -142,7 +143,7 @@ class TwitterAgent(MCPAgent):
         if not message:
             raise McpError("No tweet message provided")
 
-        if not self.client:
+        if not hasattr(self, 'client') or not self.client:
             raise McpError("Twitter client not initialized. Check your credentials.")
 
         try:
@@ -157,7 +158,7 @@ class TwitterAgent(MCPAgent):
                     tweet_url=tweet_url
                 )
                 self.logger.info(f"Tweet created successfully: {tweet_url}")
-                return [TextContent(type="text", text=result.json(indent=2))]
+                return [TextContent(type="text", text=result.model_dump_json(indent=2))]
             else:
                 raise McpError("Failed to create tweet: No data returned.")
         except tweepy.TweepyException as e:
@@ -180,7 +181,7 @@ class TwitterAgent(MCPAgent):
         if not message:
             raise McpError("No reply message provided")
 
-        if not self.client:
+        if not hasattr(self, 'client') or not self.client:
             raise McpError("Twitter client not initialized. Check your credentials.")
 
         try:
@@ -200,7 +201,7 @@ class TwitterAgent(MCPAgent):
                     tweet_url=reply_url
                 )
                 self.logger.info(f"Replied to tweet successfully: {reply_url}")
-                return [TextContent(type="text", text=result.json(indent=2))]
+                return [TextContent(type="text", text=result.model_dump_json(indent=2))]
             else:
                 raise McpError("Failed to reply to tweet: No data returned.")
         except tweepy.TweepyException as e:
@@ -215,4 +216,3 @@ class TwitterAgent(MCPAgent):
             error_msg = f"Unexpected error replying to tweet: {e}"
             self.logger.error(error_msg)
             raise McpError(error_msg) from e
-
