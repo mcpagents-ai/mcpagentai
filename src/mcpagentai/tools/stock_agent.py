@@ -1,7 +1,7 @@
 from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource
 
 from mcpagentai.core.agent_base import MCPAgent
-from mcpagentai.defs import StockTools, StockGetPrice, StockGetTickerByNameAgent
+from mcpagentai.defs import StockTools, StockGetPrice, StockGetTickerByNameAgent, StockGetPriceHistory
 
 from typing import Sequence, Union
 
@@ -26,7 +26,21 @@ class StockAgent(MCPAgent):
                               }
                  ),
             Tool(name=StockTools.GET_STOCK_PRICE_TODAY.value,
-                 description="Get bio of specific eliza character",
+                 description="Get last stock price",
+                 inputSchema={
+                     "type": "object",
+                     "properties":
+                         {
+                             "ticker":
+                                 {
+                                     "type": "string",
+                                     "description": "Ticker of stock"
+                                 },
+                             "required": ["ticker"]
+                         }
+                 }),
+            Tool(name=StockTools.GET_STOCK_PRICE_HISTORY.value,
+                 description="Get history of stock price",
                  inputSchema={
                      "type": "object",
                      "properties":
@@ -48,6 +62,8 @@ class StockAgent(MCPAgent):
             return self._handle_get_ticker_by_name(arguments)
         elif name == StockTools.GET_STOCK_PRICE_TODAY.value:
             return self._handle_get_stock_price_today(arguments)
+        elif name == StockTools.GET_STOCK_PRICE_HISTORY.value:
+            return self._handle_get_stock_price_history(arguments)
         else:
             raise ValueError(f"Unknown tool value: {name}")
 
@@ -61,6 +77,13 @@ class StockAgent(MCPAgent):
     def _handle_get_stock_price_today(self, arguments: dict) -> Sequence[TextContent]:
         ticker = arguments.get("ticker")
         result = self._get_stock_price_today(ticker)
+        return [
+            TextContent(type="text", text=json.dumps(result.model_dump(), indent=2))
+        ]
+
+    def _handle_get_stock_price_history(self, arguments: dict) -> Sequence[TextContent]:
+        ticker = arguments.get("ticker")
+        result = self._get_stock_price_history(ticker)
         return [
             TextContent(type="text", text=json.dumps(result.model_dump(), indent=2))
         ]
@@ -79,3 +102,10 @@ class StockAgent(MCPAgent):
         price_series = data['Time Series (Daily)']
         last_day = next(iter(price_series))
         return StockGetPrice(price=price_series[last_day]['4. close'])
+
+    def _get_stock_price_history(self, ticker: str) -> StockGetPriceHistory:
+        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey=demo"
+        response = requests.get(url)
+        data = response.json()
+        price_series = data['Time Series (Daily)']
+        return StockGetPriceHistory(prices=price_series)

@@ -106,12 +106,16 @@ class ElizaGetCharacterLore(BaseModel):
 class StockTools(str, Enum):
     GET_TICKER_BY_NAME = "get_ticker_by_name"
     GET_STOCK_PRICE_TODAY = "get_stock_price"
+    GET_STOCK_PRICE_HISTORY = "get_stock_price_history"
 
 class StockGetTickerByNameAgent(BaseModel):
     tickers: List[str]
 
 class StockGetPrice(BaseModel):
     price: float
+
+class StockGetPriceHistory(BaseModel):
+    prices: Dict
 
 # -- TWITTER MODELS ------------------------------------------ #
 

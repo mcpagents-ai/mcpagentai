@@ -1,6 +1,6 @@
 [project]
 name = "mcpagentai"
-version = "0.4.3"
+version = "0.4.4"
 description = "A generic multi-tool MCP Agent with Time, Weather, Dictionary, Calculator, etc."
 readme = "README.md"
 requires-python = ">=3.12"
