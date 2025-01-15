@@ -1,0 +1,5 @@
+package-lock.json
+package.json
+cookies.json
+node_modules/
+__pycache__/

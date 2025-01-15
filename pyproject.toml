@@ -1,13 +1,14 @@
 [project]
 name = "mcpagentai"
-version = "0.4.4"
-description = "A generic multi-tool MCP Agent with Time, Weather, Dictionary, Calculator, etc."
+version = "1.0.0"
+description = "A generic multi-tool MCP Agent with Twitter, Eliza, Weather, Dictionary, Calculator, etc."
 readme = "README.md"
 requires-python = ">=3.12"
 authors = [
     { name = "MCPAgentAIDev", email = "dev@mcpagentai.com" },
 ]
-keywords = ["mcp", "agent", "LLM", "time", "weather", "dictionary", "calculator", "currency"]
+keywords = ["mcp", "agent", "LLM", "time", "weather", "dictionary",
+            "calculator", "currency", "twitter", "aiagent", "mcp"]
 license = { text = "MIT" }
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -21,6 +22,7 @@ dependencies = [
     "pydantic",
     "requests",
     "tweepy",
+    "anthropic",
 ]
 
 [project.scripts]

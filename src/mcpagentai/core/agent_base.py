@@ -1,5 +1,6 @@
 import abc
 from typing import Sequence, Union
+from dotenv import load_dotenv
 from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource
 
 from .logging import get_logger
@@ -10,8 +11,9 @@ class MCPAgent(abc.ABC):
     """
 
     def __init__(self):
+        load_dotenv()
         self.logger = get_logger(self.__class__.__name__)
-        self.logger.info(f"Initializing agent: {self.__class__.__name__}")
+        self.logger.debug(f"Initializing agent: {self.__class__.__name__}")
 
     @abc.abstractmethod
     def list_tools(self) -> list[Tool]:

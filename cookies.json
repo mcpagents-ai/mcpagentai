@@ -1,0 +1,44 @@
+[
+  {
+    "key": "auth_token",
+    "value": "REALVALUE",
+    "domain": "twitter.com",
+    "path": "/",
+    "secure": true,
+    "httpOnly": true,
+    "hostOnly": false,
+    "creation": "2025-01-15T00:10:43.814Z",
+    "lastAccessed": "2025-01-15T00:10:44.282Z"
+  },
+  {
+    "key": "ct0",
+    "value": "REALVALUE",
+    "domain": "twitter.com",
+    "path": "/",
+    "secure": true,
+    "hostOnly": false,
+    "creation": "2025-01-15T00:10:43.815Z",
+    "lastAccessed": "2025-01-15T00:10:44.282Z"
+  },
+  {
+    "key": "twid",
+    "value": "REALVALUE",
+    "domain": "twitter.com",
+    "path": "/",
+    "secure": true,
+    "httpOnly": true,
+    "hostOnly": false,
+    "creation": "2025-01-15T00:10:43.816Z",
+    "lastAccessed": "2025-01-15T00:10:44.282Z"
+  },
+  {
+    "key": "guest_id",
+    "value": "REALVALUE",
+    "domain": "twitter.com",
+    "path": "/",
+    "secure": true,
+    "hostOnly": false,
+    "creation": "2025-01-15T00:10:43.816Z",
+    "lastAccessed": "2025-01-15T00:10:44.282Z"
+  }
+]

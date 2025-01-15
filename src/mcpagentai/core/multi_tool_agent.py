@@ -24,6 +24,12 @@ class MultiToolAgent(MCPAgent):
             combined_tools.extend(agent.list_tools())
         return combined_tools
 
+    def has_tool(self, tool_name: str) -> bool:
+        """
+        Determine if this agent implements a tool by the given name.
+        """
+        return any(tool.name == tool_name for tool in self.list_tools())
+
     def call_tool(
         self,
         name: str,

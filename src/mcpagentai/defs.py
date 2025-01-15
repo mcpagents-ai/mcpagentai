@@ -131,3 +131,30 @@ class TwitterResult(BaseModel):
     message: Optional[str] = None
     tweet_url: Optional[str] = None
     error: Optional[str] = None
+
+
+# -------------------------------------------------------------------------
+# CRYPTO MODELS
+# -------------------------------------------------------------------------
+class CryptoTools(str, Enum):
+    GET_CRYPTO_PRICE = "get_crypto_price"
+    GET_CRYPTO_INFO = "get_crypto_info"
+
+class CryptoPriceResult(BaseModel):
+    symbol: str
+    price_usd: float
+    price_btc: Optional[float]
+    market_cap: Optional[float]
+    volume_24h: Optional[float]
+    change_24h: Optional[float]
+    last_updated: str
+
+class CryptoInfoResult(BaseModel):
+    symbol: str
+    name: str
+    description: Optional[str]
+    website: Optional[str]
+    explorer: Optional[str]
+    rank: Optional[int]
+    total_supply: Optional[float]
+    circulating_supply: Optional[float]
