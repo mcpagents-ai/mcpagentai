@@ -9,8 +9,15 @@ import requests
 
 import json
 
+import os
+
 
 class StockAgent(MCPAgent):
+    def __init__(self):
+        super().__init__()
+        self.alphavantage_key = os.getenv("ALPHA_VANTAGE_API_KEY")
+        if self.alphavantage_key is None:
+            self.alphavantage_key = "demo"
     def list_tools(self) -> list[Tool]:
         return [
             Tool(name=StockTools.GET_TICKER_BY_NAME.value,
@@ -90,13 +97,13 @@ class StockAgent(MCPAgent):
 
     def _get_ticker_by_name(self, ticker: str) -> StockGetTickerByNameAgent:
         # todo add request success error handling
-        url = f"https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={ticker}&apikey=demo%27)"
+        url = f"https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={ticker}&apikey={self.alphavantage_key}%27)"
         response = requests.get(url)
         data = response.json()
         return StockGetTickerByNameAgent(tickers=data['bestMatches'])
 
     def _get_stock_price_today(self, ticker: str) -> StockGetPrice:
-        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey=demo"
+        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey={self.alphavantage_key}"
         response = requests.get(url)
         data = response.json()
         price_series = data['Time Series (Daily)']
@@ -104,7 +111,7 @@ class StockAgent(MCPAgent):
         return StockGetPrice(price=price_series[last_day]['4. close'])
 
     def _get_stock_price_history(self, ticker: str) -> StockGetPriceHistory:
-        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey=demo"
+        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey={self.alphavantage_key}"
         response = requests.get(url)
         data = response.json()
         price_series = data['Time Series (Daily)']
