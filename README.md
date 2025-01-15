@@ -11,15 +11,16 @@
 - 🔧 **Standardized Wrapping**: Provides an abstraction layer for building tools using the MCP protocol.
 - 🚀 **Flexible Use Cases**: Easily add or remove tools to fit your specific requirements.
 - ✨ **Out-of-the-Box Tools**: Includes pre-built tools for common scenarios:
+  - 🐦 **Twitter Management**: Automate tweeting, replying, and managing Twitter interactions.
+  - 💸 Crypto: Get the latest cryptocurrency prices.
+  - 🤖 [ElizaOS](https://github.com/elizaos/eliza) Integration: Seamlessly connect and interact with ElizaOS for enhanced automation.
   - 🕑 Time utilities
   - ☁️ Weather information (API)
   - 📚 Dictionary lookups
   - 🧮 Calculator for mathematical expressions
   - 💵 Currency exchange (API)
   - 📈 Stocks Data: Access real-time and historical stock market information.
-  - 🤖 [ElizaOS](https://github.com/elizaos/eliza) Integration: Seamlessly connect and interact with ElizaOS for enhanced automation.
-  - 🐦 **Twitter Management**: Automate tweeting, replying, and managing Twitter interactions.
-   
+  - [WIP] 📰 News: Retrieve the latest news headlines.
 
 ### Tech Stack 🛠️
 - **Python**: Core programming language
@@ -66,23 +67,26 @@ mcpagentai --local-timezone "America/New_York"
 
 ---
 
-## Docker Environment Variables for Twitter Integration 🐦
+## Twitter Integration 🐦
+
+MCPAgentAI offers robust Twitter integration, allowing you to automate tweeting, replying, and managing Twitter interactions. This section provides detailed instructions on configuring and using the Twitter integration, both via Docker and `.env` + `scripts/run_agent.sh`.
+
+### Docker Environment Variables for Twitter Integration
 
 When running MCPAgentAI within Docker, it's essential to configure environment variables for Twitter integration. These variables are divided into two categories:
 
-### **1. Agent Node Client Credentials**
-These credentials are used by the **Node.js client** within the agent for managing Twitter interactions, so the `src/mcpagentai/tools/twitter/client_agent.py`
-#### Twitter credentials for Agent Node Client
+#### 1. Agent Node Client Credentials
+These credentials are used by the **Node.js client** within the agent for managing Twitter interactions.
+
 ```dockerfile
 ENV TWITTER_USERNAME=
 ENV TWITTER_PASSWORD=
 ENV TWITTER_EMAIL=
 ```
 
-### **2. Tweepy (Twitter API v2) Credentials**
-These credentials are utilized by **Tweepy** for interacting with Twitter's API v2 so the `src/mcpagentai/tools/twitter/api_agent.py`
+#### 2. Tweepy (Twitter API v2) Credentials
+These credentials are utilized by **Tweepy** for interacting with Twitter's API v2.
 
-#### Twitter API v2 credentials for Tweepy
 ```dockerfile
 ENV TWITTER_API_KEY=
 ENV TWITTER_API_SECRET=
@@ -93,6 +97,60 @@ ENV TWITTER_CLIENT_SECRET=
 ENV TWITTER_BEARER_TOKEN=
 ```
 
+### Running MCPAgentAI with Docker
+
+1. **Build the Docker image:**
+   ```bash
+   docker build -t mcpagentai .
+   ```
+
+2. **Run the container:**
+   ```bash
+   docker run -i --rm mcpagentai
+   ```
+
+### Running MCPAgentAI with `.env` + `scripts/run_agent.sh`
+
+#### Setting Up Environment Variables
+
+Create a `.env` file in the root directory of your project and add the following environment variables:
+
+```dotenv
+ANTHROPIC_API_KEY=your_anthropic_api_key
+ELIZA_PATH=/path/to/eliza
+TWITTER_USERNAME=your_twitter_username
+TWITTER_EMAIL=your_twitter_email
+TWITTER_PASSWORD=your_twitter_password
+PERSONALITY_CONFIG=/path/to/personality_config.json
+RUN_AGENT=True
+
+# Tweepy (Twitter API v2) Credentials
+TWITTER_API_KEY=your_twitter_api_key
+TWITTER_API_SECRET=your_twitter_api_secret
+TWITTER_ACCESS_TOKEN=your_twitter_access_token
+TWITTER_ACCESS_SECRET=your_twitter_access_secret
+TWITTER_CLIENT_ID=your_twitter_client_id
+TWITTER_CLIENT_SECRET=your_twitter_client_secret
+TWITTER_BEARER_TOKEN=your_twitter_bearer_token
+```
+
+#### Running the Agent
+
+1. **Make the script executable:**
+   ```bash
+   chmod +x scripts/run_agent.sh
+   ```
+
+2. **Run the agent:**
+   ```bash
+   bash scripts/run_agent.sh
+   ```
+
+
+### Summary
+You can configure MCPAgentAI to run with Twitter integration either using Docker or by setting up environment variables in a `.env` file and running the `scripts/run_agent.sh` script.
+
+This flexibility allows you to choose the method that best fits your deployment environment.
 
 ---
 
@@ -100,7 +158,7 @@ ENV TWITTER_BEARER_TOKEN=
 
 [MCPAgentAI](https://github.com/mcpagents-ai/mcpagentai) offers seamless integration with [ElizaOS](https://github.com/elizaos/eliza), providing enhanced automation capabilities through Eliza Agents. There are two primary ways to integrate Eliza Agents:
 
-### **1. Directly Use Eliza Agents from MCPAgentAI**
+### **1. Directly Use Eliza Agents from mcpagentai**
 This approach allows you to use Eliza Agents without running the Eliza Framework in the background. It simplifies the setup by embedding Eliza functionality directly within MCPAgentAI.
 
 **Steps:**
@@ -123,7 +181,7 @@ This approach allows you to use Eliza Agents without running the Eliza Framework
 - **Highlight Feature:** Emphasizes the flexibility of MCPAgentAI in integrating various tools seamlessly.
 
 
-### **2. Run Eliza Framework from MCPAgentAI**
+### **2. Run Eliza Framework from mcpagentai**
 This method involves running the Eliza Framework as a separate background process alongside MCPAgentAI.
 
 **Steps:**
