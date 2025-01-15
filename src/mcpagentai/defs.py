@@ -158,3 +158,22 @@ class CryptoInfoResult(BaseModel):
     rank: Optional[int]
     total_supply: Optional[float]
     circulating_supply: Optional[float]
+
+
+# -------------------------------------------------------------------------
+# NBA MODELS
+# -------------------------------------------------------------------------
+class NBATools(str, Enum):
+    GET_ALL_TEAMS_DATA = "get_all_teams_data"
+    GET_ALL_ACTIVE_PLAYERS_DATA =  "get_all_active_players_data"
+    GET_SCHEDULES_DATA = "get_schedules_data"
+
+
+class NBAGetAllTeamsData(BaseModel):
+    teams_data: List[Dict]
+
+class NBAGetAllActivePlayersData(BaseModel):
+    players_data: List[Dict]
+
+class NBAGetSchedulesData(BaseModel):
+    schedules_data: List[Dict]
