@@ -13,11 +13,13 @@ import os
 
 
 class StockAgent(MCPAgent):
-    def __init__(self):
+    def __init__(self, alphavantage_key: str | None = None):
         super().__init__()
-        self.alphavantage_key = os.getenv("ALPHA_VANTAGE_API_KEY")
+        self.alphavantage_key = alphavantage_key   
         if self.alphavantage_key is None:
-            self.alphavantage_key = "demo"
+            self.alphavantage_key = os.getenv("ALPHA_VANTAGE_API_KEY")
+            if self.alphavantage_key is None:
+                self.alphavantage_key = "demo"
     def list_tools(self) -> list[Tool]:
         return [
             Tool(name=StockTools.GET_TICKER_BY_NAME.value,
