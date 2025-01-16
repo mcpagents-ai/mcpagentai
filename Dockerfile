@@ -86,6 +86,9 @@ ENV PERSONALITY_CONFIG=/app/eliza/charachter.json
 ENV ANTHROPIC_API_KEY=
 ENV SPORTS_DATA_NBA_IO_KEY=
 
+ENV GOOGLE_PICKLE_PATH=/app/google_pickle.dump
+ENV GOOGLE_CREDENTIALS_PATH=/app/google_credentials.json
+
 
 
 ENV TWITTER_API_KEY=
