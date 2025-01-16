@@ -4,7 +4,7 @@ Shared data models used across multiple tools (pydantic BaseModels, Enums, etc.)
 
 from enum import Enum
 from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 
 
 # -------------------------------------------------------------------------
@@ -177,3 +177,16 @@ class NBAGetAllActivePlayersData(BaseModel):
 
 class NBAGetSchedulesData(BaseModel):
     schedules_data: List[Dict]
+
+# -------------------------------------------------------------------------
+# GOOGLE DRIVE MODELS
+# -------------------------------------------------------------------------
+class GoogleDriveTools(str, Enum):
+    GET_ALL_FILENAMES = "get_all_filenames"
+    GET_FILE_CONTENT = "get_file_content"
+
+class GoogleDriveGetFilenames(BaseModel):
+    filenames: List
+
+class GoogleDriveGetFileContent(BaseModel):
+    file_content: Any
