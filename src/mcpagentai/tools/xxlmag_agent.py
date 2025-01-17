@@ -3,7 +3,6 @@ from mcp.shared.exceptions import McpError
 
 
 from mcpagentai.core.agent_base import MCPAgent
-from mcpagentai.defs import NBATools, NBAGetSchedulesData, NBAGetAllTeamsData, NBAGetAllActivePlayersData
 from mcpagentai.defs import XXLMagTools, XXLMagGetLatestArticle
 
 from bs4 import BeautifulSoup
@@ -35,7 +34,7 @@ class XXLMagAgent(MCPAgent):
     def call_tool(self, 
                   name: str, 
                   arguments: dict) -> Sequence[Union[TextContent, ImageContent, EmbeddedResource]]:
-        if name == NBATools.GET_ALL_TEAMS_DATA.value:
+        if name == XXLMagTools.GET_LATEST_ARTICLE.value:
             return self._handler_get_latest_article(arguments)
         else:
             raise ValueError(f"Unknown tool value: {name}") 
@@ -56,3 +55,5 @@ class XXLMagAgent(MCPAgent):
         
         latest_article_url = f"{self.__base_url}{elements[2].get("href")}"
         return XXLMagGetLatestArticle(article_url=latest_article_url)
+    
+    # add get latest article content? maybe 
