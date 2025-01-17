@@ -26,4 +26,4 @@ def authenticate(pickle_file_path, credentials_json_path):
             pickle.dump(creds, token)
 
 if __name__ == '__main__':
-    authenticate(os.getenv("GOOGLE_PICKLE_PATH"), os.getenv("GOOGLE_CREDENTIALS_PATH"))
+    authenticate("../../google_pickle.dump", "../../google_credentials.json")
