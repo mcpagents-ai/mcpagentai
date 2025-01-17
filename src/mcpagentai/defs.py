@@ -210,3 +210,13 @@ class SpaceXTools(str, Enum):
 
 class SpaceXGetLatestLaunches(BaseModel):
     launches_data: Dict
+
+# -------------------------------------------------------------------------
+# DAD JOKE MODELS
+# -------------------------------------------------------------------------
+
+class DadJokeTools(str, Enum):
+    GET_DAD_JOKE = "get_dad_joke"
+
+class DadJokeGetDadJoke(BaseModel):
+    joke: str

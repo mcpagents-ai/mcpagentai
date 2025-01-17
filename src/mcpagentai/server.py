@@ -23,6 +23,7 @@ from mcpagentai.tools.nba_agent import NBAAgent
 from mcpagentai.tools.gdrive_agent import GoogleDriveAgent
 from mcpagentai.tools.xxlmag_agent import XXLMagAgent
 from mcpagentai.tools.spacex_agent import SpaceXAgent
+from mcpagentai.tools.dad_joke_agent import DadJokeAgent
 
 async def start_server(local_timezone: str | None = None) -> None:
     logger = get_logger("mcpagentai.server")
@@ -40,6 +41,7 @@ async def start_server(local_timezone: str | None = None) -> None:
     google_drive_agent = GoogleDriveAgent()
     xxlmag_agent = XXLMagAgent()
     spacex_agent = SpaceXAgent()
+    dadjoke_agent = DadJokeAgent()
     twitter_agent = TwitterAgent()
 
     # Combine them into one aggregator
