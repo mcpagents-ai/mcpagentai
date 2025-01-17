@@ -200,3 +200,13 @@ class XXLMagTools(str, Enum):
 
 class XXLMagGetLatestArticle(BaseModel):
     article_url: str
+
+# -------------------------------------------------------------------------
+# SPACEX MODELS
+# -------------------------------------------------------------------------
+
+class SpaceXTools(str, Enum):
+    GET_LATEST_LAUNCHES = "get_latest_launches"
+
+class SpaceXGetLatestLaunches(BaseModel):
+    launches_data: Dict

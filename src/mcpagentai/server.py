@@ -22,6 +22,7 @@ from mcpagentai.tools.weather_agent import WeatherAgent
 from mcpagentai.tools.nba_agent import NBAAgent
 from mcpagentai.tools.gdrive_agent import GoogleDriveAgent
 from mcpagentai.tools.xxlmag_agent import XXLMagAgent
+from mcpagentai.tools.spacex_agent import SpaceXAgent
 
 async def start_server(local_timezone: str | None = None) -> None:
     logger = get_logger("mcpagentai.server")
@@ -38,6 +39,7 @@ async def start_server(local_timezone: str | None = None) -> None:
     nba_agent = NBAAgent()
     google_drive_agent = GoogleDriveAgent()
     xxlmag_agent = XXLMagAgent()
+    spacex_agent = SpaceXAgent()
     twitter_agent = TwitterAgent()
 
     # Combine them into one aggregator
