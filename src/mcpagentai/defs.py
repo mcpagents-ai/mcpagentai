@@ -190,3 +190,13 @@ class GoogleDriveGetFilenames(BaseModel):
 
 class GoogleDriveGetFileContent(BaseModel):
     file_content: Any
+
+
+# -------------------------------------------------------------------------
+# XXLMAG DRIVE MODELS
+# -------------------------------------------------------------------------
+class XXLMagTools(str, Enum):
+    GET_LATEST_ARTICLE = "get_latest_article"
+
+class XXLMagGetLatestArticle(BaseModel):
+    article_url: str
